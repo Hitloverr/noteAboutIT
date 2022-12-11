@@ -1,0 +1,137 @@
+
+
+
+
+
+Arraylist源码解读  扩容和缩容
+存放元素：有序
+线程是否安全 不安全
+Get Add方法
+
+数据结构：基于数组实现 类型object类型
+
+get方法(index)
+默认初始容量为10；
+
+
+
+时间复杂度  o(1)/o(n)/o(log n )
+
+o(1) 只需要通过查询一次就能找到元素 get(index) 基于下标查询
+o(n) 需要从头查询到尾部 例如根据元素值查询 链表
+o(log n) 二叉树 红黑树
+数组：时间复杂度o(1) 基于下标查询
+链表:时间复杂度o(n) 
+
+扩容是1.5倍
+
+源码分析：
+transient Object[] elementData;
+
+
+   private void ensureExplicitCapacity(int minCapacity) {
+        modCount++;
+
+        // overflow-conscious code
+        // 判断是否需要扩容
+        if (minCapacity - elementData.length > 0)
+            grow(minCapacity);
+    }
+
+    扩容底层使用Arrays.copyOf方法
+
+  remove 方法：
+
+  arraylist集合删除 是否需要考虑缩容 问题 需要缩容的问题
+  基于元素内容删除时间复杂度就是为o(n)
+
+
+
+   private void fastRemove(int index) {
+        modCount++;
+                       16-10-1 =5
+        ###计算删除index 后面所有元素有多少个
+        int numMoved = size - index - 1;
+        if (numMoved > 0)
+            System.arraycopy(elementData, index+1, elementData, index,
+                             numMoved);
+        elementData[--size] = null; // clear to let GC do its work
+    }
+
+
+      modCount++;  多线程的情况下 A线程在遍历数据 B线程在继续存放数据
+
+
+      Arraylist与Vector集合有那些区别
+      相同点：都是基于数组实现 、默认初始容量为10
+      不同点： 
+      1. Arraylist线程不安全  Vector线程是安全 
+      2. 扩容Arraylist 1.5倍   Vector2倍
+
+      capacityIncrement 可以自定义扩容容量
+
+     HashMap 缩容： 没有缩容 需要重新计算index值‘
+
+
+
+
+
+     HashSet底层原理 基于HashMap集合实现
+
+     思考点：
+      HashSet为什么是无序  因为HashMap遍历key无序
+      HashSet底层数据结构模型 数组+链表+红黑树
+
+      HashMap集合中key是否允许重复 不允许   比较hash值相等+equals不等情况下
+      HashSet底层原理 基于HashMap集合实现 key为HashSet存放的元素 value值空的object对象
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      LinkedList原理 底层基于链表结构
+
+      数组与链表结构区别：
+
+      数组：保证元素有序性 可以基于下标查询时间复杂度:o（1）
+      链表：单向链表和双向链表 可以基于下标查询 时间复杂度:o（n）
+
+      数组适合于： 基于下标查询arrays[1] 增删有可能会对我们数组实现移动，效率非常低；
+      链表适合于： 增删 只需要该引用指针关系
+
+      HashMap底层单链表
+、
+      LinkedList底层双向链表
+      HashMap底层单链表 不能够key有序性
+      LinkedHashMap双向链表 保证key有序性
+
+      LinkedList为什么需要用一个变量记录下头结点 后期遍历数据知道从哪里开始
+
+
+      100  0-50 51-100
+
+      index=25
+
+      0-50 折半  0-24 25-50 折半算法 o(logn)
+
+      链表的index值是怎么知道的呢？  链表长度
+
+
+
+
+
+    
+
+
+
